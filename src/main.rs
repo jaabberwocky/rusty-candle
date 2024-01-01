@@ -14,9 +14,14 @@ impl Model {
 }
 
 fn main() -> Result<()> {
-    // Use Device::new_cuda(0)?; to use the GPU.
-    let device = Device::new_cuda(0)?;
-
+    let device;
+    if let Ok(dev) = Device::new_cuda(0) {
+        println!("Using GPU");
+        device = dev;
+    } else {
+        println!("Using CPU");
+        device = Device::Cpu;
+    }
     let first = Tensor::randn(0f32, 1.0, (784, 100), &device)?;
     let second = Tensor::randn(0f32, 1.0, (100, 10), &device)?;
     let model = Model { first, second };
